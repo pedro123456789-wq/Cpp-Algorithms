@@ -13,6 +13,7 @@ void showArray(int* array, int arraySize){
 }
 
 
+// -- Bubble Sort --
 int* bubbleSort(int* array, int arraySize){
   bool sorted = false;
   int iterations = 0;
@@ -36,6 +37,7 @@ int* bubbleSort(int* array, int arraySize){
 }
 
 
+// -- Insertion Sort --
 int* insertionSort(int* array, int arraySize){
   for (int currentIndex = 0; currentIndex < arraySize; currentIndex ++){
     int targetItem = array[currentIndex];
@@ -52,6 +54,7 @@ int* insertionSort(int* array, int arraySize){
 }
 
 
+// -- Merge Sort --
 int* subSort(int* arr1, int* arr2, int length1, int length2){
     // create new ouptut array
     int* output = (int*)malloc(length1 + length2);
@@ -96,7 +99,7 @@ int* mergeSort(int* array, int arraySize){
     return array;
   }
   
-  // ---------- Split array in half ---------------
+  // split array in half
   // find midpoint of array and create left and right arrays with correct lengths
   int midpoint = arraySize / 2;
   int* leftArr = (int*)malloc(midpoint);
@@ -118,6 +121,40 @@ int* mergeSort(int* array, int arraySize){
   return subSort(sortedLeft, sortedRight, midpoint, arraySize - midpoint);
 }
 
+
+// -- Quick Sort --
+int* partition(int* array, int startingIndex, int endingIndex) {
+  // partition array around pivot (first element)
+  
+	if (startingIndex < endingIndex){
+		int pivot = array[startingIndex];
+		int lowerIndex = startingIndex + 1;
+
+		for (int currentIndex = startingIndex; currentIndex < endingIndex; currentIndex++) {
+			if (array[currentIndex] < pivot) {
+				int temp = array[lowerIndex];
+				array[lowerIndex] = array[currentIndex];
+				array[currentIndex] = temp;
+				lowerIndex++;
+			}
+		}
+
+		array[startingIndex] = array[lowerIndex - 1];
+		array[lowerIndex - 1] = pivot;
+    
+    // recursive case
+    // partition upper and lower partitioned sections     
+		partition(array, startingIndex, lowerIndex - 2);
+		partition(array, lowerIndex, endingIndex);
+	}
+
+	return array;
+}
+
+
+int* quickSort(int* array, int arraySize) {
+	return partition(array, 0, arraySize);
+}
 
 
 int main() 
