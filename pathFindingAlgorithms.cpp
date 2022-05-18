@@ -1,17 +1,20 @@
+using namespace std;
 #include <iostream>
 #include <map>
 #include <list>
 #include <string>
-using namespace std;
+#include <vector>
 
-const int INF = 999999999;
+
+int const INF = 999999999;
+
 
 class Node{
   private:
     string name;
     string previousNode;
     int distance = INF;
-    boolean isVisited = false;
+    bool isVisited = false;
     map<string, int> children;
     
   public:
@@ -38,14 +41,14 @@ class Node{
     }
     
     void setDistance(int newDistance){
-      distance = newDistance
+      distance = newDistance;
     }
     
-    boolean getVisited(){
+    bool getVisited(){
       return isVisited;
     }
     
-    void setVisited(boolean newState){
+    void setVisited(bool newState){
       isVisited = newState;
     }
     
@@ -53,9 +56,11 @@ class Node{
       children[newNode] = connection;
     }
     
-    map<string, int> getConnections(){
-      for (auto const& [key, val] : children){
-        cout << key << ":" << val << endl;
+    map<string, int> getConnections(bool isShow){
+      if (isShow){
+        for (auto const &[key, val] : children){
+          cout << key << ":" << val << endl;
+        }
       }
       
       return children;
@@ -63,22 +68,77 @@ class Node{
 };
 
 
-void getNextNode(list<Node> nodes){
-  int minimum = INF;
-  
-  for (auto const& i : nodes) {
-    
+
+Node getNode(string name, vector<Node> nodes){
+  for (auto &node : nodes){
+    if (node.getName() == name){
+      return node;
+    }
   }
 }
-void dikstrasAlgorithm(list<Node> nodes){
-  nodes[0].setDistance(0);
+
+
+Node getNextNode(vector<Node> nodes){
+  int minimum = INF;
+  string currentNode;
+  
+  for (auto &node : nodes) {
+    int nodeDistance = node.getDistance();
+    
+    if (nodeDistance < minimum && !node.getVisited()){
+      currentNode = node.getName();
+      minimum = nodeDistance;
+    }
+  }
   
   
+  return getNode(currentNode, nodes);
 }
+
+
+bool hasNodes(vector<Node> nodes){
+  for (auto &node : nodes){
+    // cout << node.getName() << ":" << node.getVisited() << endl;
+    
+    if (!node.getVisited()){
+      return true;
+    }
+  }
+  
+  cout << "\n\n\n" << endl;
+  
+  return false;
+}
+
+void dikstrasAlgorithm(vector<Node> nodes){
+  // set distance to root node as zero
+  nodes[0].setDistance(0);
+  bool isRunning = true;
+  
+  while (hasNodes(nodes)){
+    cout << "iteration completed" << endl;
+    // change nodes list directly to fix bug
+    Node parentNode = getNextNode(nodes);
+    
+    for (auto &[nodeName, distance] : parentNode.getConnections(false)){
+      int newDistance = parentNode.getDistance() + distance;
+      Node childNode = getNode(nodeName, nodes);
+      
+      if (newDistance < childNode.getDistance()){
+        childNode.setDistance(newDistance);
+        childNode.setPreviousNode(parentNode.getName());
+      }
+    }
+    
+    parentNode.setVisited(true);
+    cout << parentNode.getVisited() << endl;
+  }
+}
+
 
 
 int main(){
-  list<Node> nodes;
+  vector<Node> nodes;
   
   Node a = Node("A");
   Node b = Node("B");
@@ -100,7 +160,12 @@ int main(){
   e.addConnection("D", 4);
   e.addConnection("F", 5);
   
+  nodes.push_back(a);
+  nodes.push_back(b);
+  nodes.push_back(c);
+  nodes.push_back(d);
+  nodes.push_back(e);
   
-  
-  a.getConnections();
+  cout << nodes[0].getName() << endl;
+  dikstrasAlgorithm(nodes);
 }
