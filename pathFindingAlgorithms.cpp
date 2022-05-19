@@ -73,7 +73,7 @@ class Graph{
   private:
     vector<Node> nodes;
 
-    int getNode(string name, vector<Node> nodes){
+    int getNode(string name){
       int index = 0;
   
       for (auto &node : nodes){
@@ -88,7 +88,7 @@ class Graph{
     }
 
 
-    Node getNextNode(vector<Node> nodes){
+    Node getNextNode(){
       int minimum = INF;
       string currentNode;
       
@@ -101,11 +101,11 @@ class Graph{
         }
       }
       
-      return nodes[getNode(currentNode, nodes)];
+      return nodes[getNode(currentNode)];
     }
     
     
-    bool hasNodes(vector<Node> nodes){
+    bool hasNodes(){
       for (auto &node : nodes){
         if (!node.getVisited()){
           return true;
@@ -128,19 +128,24 @@ class Graph{
   
   
   public:
-    void dikstrasAlgorithm(vector<Node> nodes){
+    Graph(vector<Node> startingNodes){
+      nodes = startingNodes;
+    }
+    
+    
+    void dikstrasAlgorithm(){
       // set distance to root node as zero
       nodes[0].setDistance(0);
       bool isRunning = true;
       
-      while (hasNodes(nodes)){
+      while (hasNodes()){
         // change nodes list directly to fix bug
-        Node parentNode = getNextNode(nodes);
-        int parentIndex = getNode(parentNode.getName(), nodes);
+        Node parentNode = getNextNode();
+        int parentIndex = getNode(parentNode.getName());
         
         for (auto &[nodeName, distance] : parentNode.getConnections(false)){
           int newDistance = parentNode.getDistance() + distance;
-          int nodeIndex = getNode(nodeName, nodes);
+          int nodeIndex = getNode(nodeName);
           
           Node childNode = nodes[nodeIndex];
           
@@ -165,10 +170,10 @@ class Graph{
         while (hasPrevious){
           pathString.append(currentNode.getName());
           
-          int previousIndex = getNode(currentNode.getPreviousNode(), nodes);
+          int previousIndex = getNode(currentNode.getPreviousNode());
           
           if (previousIndex != -1){
-            currentNode = nodes[getNode(currentNode.getPreviousNode(), nodes)];
+            currentNode = nodes[getNode(currentNode.getPreviousNode())];
           }else{
             hasPrevious = false;
           }
@@ -178,20 +183,6 @@ class Graph{
       }
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -227,6 +218,6 @@ int main(){
   nodes.push_back(e);
   nodes.push_back(f);
   
-  Graph graph = Graph();
-  graph.dikstrasAlgorithm(nodes);
+  Graph graph = Graph(nodes);
+  graph.dikstrasAlgorithm();
 }
