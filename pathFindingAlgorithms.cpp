@@ -12,7 +12,7 @@ int const INF = 999999999;
 class Node{
   private:
     string name;
-    string previousNode;
+    string previousNode = "null";
     int distance = INF;
     bool isVisited = false;
     map<string, int> children;
@@ -69,71 +69,131 @@ class Node{
 
 
 
-Node getNode(string name, vector<Node> nodes){
-  for (auto &node : nodes){
-    if (node.getName() == name){
-      return node;
-    }
-  }
-}
+class Graph{
+  private:
+    vector<Node> nodes;
 
-
-Node getNextNode(vector<Node> nodes){
-  int minimum = INF;
-  string currentNode;
+    int getNode(string name, vector<Node> nodes){
+      int index = 0;
   
-  for (auto &node : nodes) {
-    int nodeDistance = node.getDistance();
-    
-    if (nodeDistance < minimum && !node.getVisited()){
-      currentNode = node.getName();
-      minimum = nodeDistance;
-    }
-  }
-  
-  
-  return getNode(currentNode, nodes);
-}
-
-
-bool hasNodes(vector<Node> nodes){
-  for (auto &node : nodes){
-    // cout << node.getName() << ":" << node.getVisited() << endl;
-    
-    if (!node.getVisited()){
-      return true;
-    }
-  }
-  
-  cout << "\n\n\n" << endl;
-  
-  return false;
-}
-
-void dikstrasAlgorithm(vector<Node> nodes){
-  // set distance to root node as zero
-  nodes[0].setDistance(0);
-  bool isRunning = true;
-  
-  while (hasNodes(nodes)){
-    cout << "iteration completed" << endl;
-    // change nodes list directly to fix bug
-    Node parentNode = getNextNode(nodes);
-    
-    for (auto &[nodeName, distance] : parentNode.getConnections(false)){
-      int newDistance = parentNode.getDistance() + distance;
-      Node childNode = getNode(nodeName, nodes);
+      for (auto &node : nodes){
+        if (node.getName() == name){
+          return index;
+        }
+        
+        index ++;
+      }
       
-      if (newDistance < childNode.getDistance()){
-        childNode.setDistance(newDistance);
-        childNode.setPreviousNode(parentNode.getName());
+      return -1;
+    }
+
+
+    Node getNextNode(vector<Node> nodes){
+      int minimum = INF;
+      string currentNode;
+      
+      for (auto &node : nodes) {
+        int nodeDistance = node.getDistance();
+        
+        if (nodeDistance < minimum && !node.getVisited()){
+          currentNode = node.getName();
+          minimum = nodeDistance;
+        }
+      }
+      
+      return nodes[getNode(currentNode, nodes)];
+    }
+    
+    
+    bool hasNodes(vector<Node> nodes){
+      for (auto &node : nodes){
+        if (!node.getVisited()){
+          return true;
+        }
+      }
+  
+      return false;
+    }
+    
+    
+    string reverseString(string target){
+      string reversed;
+      
+      for(int n = target.length() -1 ; n >= 0; n--){
+        reversed.push_back(target[n]);
+      }
+      
+      return reversed;
+    }
+  
+  
+  public:
+    void dikstrasAlgorithm(vector<Node> nodes){
+      // set distance to root node as zero
+      nodes[0].setDistance(0);
+      bool isRunning = true;
+      
+      while (hasNodes(nodes)){
+        // change nodes list directly to fix bug
+        Node parentNode = getNextNode(nodes);
+        int parentIndex = getNode(parentNode.getName(), nodes);
+        
+        for (auto &[nodeName, distance] : parentNode.getConnections(false)){
+          int newDistance = parentNode.getDistance() + distance;
+          int nodeIndex = getNode(nodeName, nodes);
+          
+          Node childNode = nodes[nodeIndex];
+          
+          if (newDistance < childNode.getDistance()){
+            nodes[nodeIndex].setDistance(newDistance);
+            nodes[nodeIndex].setPreviousNode(parentNode.getName());
+          }
+        }
+        nodes[parentIndex].setVisited(true);
+      }
+      
+      
+      // output paths and distances
+      for (int i = 0; i < 6; i ++){
+        cout << "Node: " << nodes[i].getName() << endl;
+        cout << "Minimum Distance: " << nodes[i].getDistance() << endl;
+        
+        string pathString;
+        Node currentNode = nodes[i];
+        bool hasPrevious = true;
+        
+        while (hasPrevious){
+          pathString.append(currentNode.getName());
+          
+          int previousIndex = getNode(currentNode.getPreviousNode(), nodes);
+          
+          if (previousIndex != -1){
+            currentNode = nodes[getNode(currentNode.getPreviousNode(), nodes)];
+          }else{
+            hasPrevious = false;
+          }
+        }
+        
+        cout << reverseString(pathString) << "\n" << endl;
       }
     }
-    
-    parentNode.setVisited(true);
-    cout << parentNode.getVisited() << endl;
-  }
-}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -165,7 +225,8 @@ int main(){
   nodes.push_back(c);
   nodes.push_back(d);
   nodes.push_back(e);
+  nodes.push_back(f);
   
-  cout << nodes[0].getName() << endl;
-  dikstrasAlgorithm(nodes);
+  Graph graph = Graph();
+  graph.dikstrasAlgorithm(nodes);
 }
