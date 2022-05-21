@@ -1,6 +1,9 @@
 #include <iostream>
 using namespace std;
 
+
+// implementation of stack using circular array
+
 class Stack {
 private:
 	int* array;
