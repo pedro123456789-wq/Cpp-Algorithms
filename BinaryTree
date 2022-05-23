@@ -1,0 +1,109 @@
+/*
+ * binary_tree.h
+ *
+ *  Created on: May 23, 2022
+ *      Author: pl156
+ */
+
+
+#include <iostream>
+using namespace std;
+
+#ifndef BINARY_TREE_H_
+#define BINARY_TREE_H_
+
+class Node {
+private:
+	int value;
+	Node* left;
+	Node* right;
+
+public:
+	Node(int newValue) {
+		value = newValue;
+		left = NULL;
+		right = NULL;
+	}
+
+	int getValue() {
+		return value;
+	}
+
+	void setLeft(Node* newNode) {
+		left = newNode;
+	}
+
+	Node* getLeft() {
+		return left;
+	}
+
+	void setRight(Node* newNode) {
+		right = newNode;
+	}
+
+	Node* getRight() {
+		return right;
+	}
+
+	void displayNode() {
+		cout << "Node -> " << value << endl;
+	}
+};
+
+class BinaryTree {
+private:
+	Node* rootNode;
+
+public:
+	BinaryTree(Node* firstNode) {
+		rootNode = firstNode;
+	}
+
+	Node* getRoot() {
+		return rootNode;
+	}
+
+	void addNode(Node* newNode) {
+		bool isPlaced = false;
+		Node* currentNode = rootNode;
+
+		while (!isPlaced) {
+			if (newNode->getValue() > currentNode->getValue()) {
+				if (currentNode->getRight() != NULL) {
+					currentNode = currentNode->getRight();
+				} else {
+					currentNode->setRight(newNode);
+					isPlaced = true;
+				}
+			} else {
+				if (currentNode->getLeft() != NULL) {
+					currentNode = currentNode->getLeft();
+				} else {
+					currentNode->setLeft(newNode);
+					isPlaced = true;
+				}
+			}
+		}
+
+		cout << "Added new node" << endl;
+	}
+
+	void showTreeRecursive(Node* node) {
+		node->displayNode();
+
+		if (node->getRight()) {
+			showTreeRecursive(node->getRight());
+		}
+
+		if (node->getLeft()) {
+			showTreeRecursive(node->getLeft());
+		}
+
+	}
+
+	void showTree() {
+		showTreeRecursive(rootNode);
+	}
+};
+
+#endif /* BINARY_TREE_H_ */
