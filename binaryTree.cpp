@@ -77,6 +77,44 @@ public:
 		cout << "Added new node" << endl;
 	}
 
+
+	Node* getNode(int value){
+		Node* currentNode = rootNode;
+		bool isFound = false;
+		bool isFinished = false;
+
+		while (!isFinished){
+			if (value == currentNode->getValue()){
+				isFinished = true;
+				isFound = true;
+			}
+			else if (value > currentNode->getValue()){
+				if (currentNode->getRight()){
+					currentNode = currentNode->getRight();
+				}else{
+					isFinished = true;
+					isFound = false;
+				}
+			}else{
+				if (currentNode->getLeft()){
+					currentNode = currentNode->getLeft();
+				}else{
+					isFinished = true;
+					isFound = false;
+				}
+			}
+		}
+
+		if (isFound){
+			return currentNode;
+		}else{
+			return NULL;
+		}
+	}
+	
+	
+	
+
 	void inOrderTraversal(Node* node) {
 		//left subtree, root, right subtree
 		// used to display nodes in tree in ascending order
