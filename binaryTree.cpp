@@ -1,16 +1,5 @@
-/*
- * binary_tree.h
- *
- *  Created on: May 23, 2022
- *      Author: pl156
- */
-
-
 #include <iostream>
 using namespace std;
-
-#ifndef BINARY_TREE_H_
-#define BINARY_TREE_H_
 
 class Node {
 private:
@@ -88,22 +77,48 @@ public:
 		cout << "Added new node" << endl;
 	}
 
-	void showTreeRecursive(Node* node) {
+	void inOrderTraversal(Node* node) {
+		//left subtree, root, right subtree
+		// used to display nodes in tree in ascending order
+
+		if (node->getLeft()) {
+			inOrderTraversal(node->getLeft());
+		}
+
 		node->displayNode();
 
 		if (node->getRight()) {
-			showTreeRecursive(node->getRight());
+			inOrderTraversal(node->getRight());
+		}
+	}
+
+	void postOrderTraversal(Node* node) {
+		//right subtree, left subtree, root
+		//shows order in which nodes need to be deleted to minimize number of operations required to delete the tree
+
+		if (node->getRight()) {
+			postOrderTraversal(node->getRight());
 		}
 
 		if (node->getLeft()) {
-			showTreeRecursive(node->getLeft());
+			postOrderTraversal(node->getLeft());
 		}
 
+		node->displayNode();
 	}
 
-	void showTree() {
-		showTreeRecursive(rootNode);
+	void preOrderTraversal(Node* node) {
+		//root node, left subtree, right subtree
+		//outputs the nodes in which the nodes should be added to reconstruct the tree
+
+		node->displayNode();
+
+		if (node->getRight()) {
+			preOrderTraversal(node->getRight());
+		}
+
+		if (node->getLeft()) {
+			preOrderTraversal(node->getLeft());
+		}
 	}
 };
-
-#endif /* BINARY_TREE_H_ */
