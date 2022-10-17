@@ -1,0 +1,47 @@
+#include <iostream>
+#include <math.h>
+#include <string>
+using namespace std;
+
+
+class UnsignedInt{
+    private:
+    string binarySequence;
+    int bits;
+
+    public:
+    UnsignedInt(string binarySequenceInp){
+        binarySequence = binarySequence;
+        bits = binarySequence.length();
+    }
+
+    int toDecimal(){
+        for (int i = 0; i < binarySequence.length(); i ++){
+            int index = binarySequence.length() - i;
+            char digit = binarySequence[index];
+
+            int total = 0;
+
+            if (digit == '1'){
+                total += pow(2, i);
+            }
+        }
+    }
+
+
+    UnsignedInt add(UnsignedInt other){
+        {}
+    }
+
+
+    string toString(){
+        return binarySequence;
+    }
+
+
+
+}
+
+int main(){
+  {}
+}
